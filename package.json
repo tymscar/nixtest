@@ -1,0 +1,10 @@
+{
+  "name": "supernixtest",
+  "version": "1.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@selfhosted/tymscartest1": "1.1.2"
+  }
+}

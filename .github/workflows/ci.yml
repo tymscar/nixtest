@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.2.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run nix build
+        run: nix build
+
+      - name: Show tree structure of result directory
+        run: |
+          echo "Tree structure of result directory:"
+          tree result
+
+      - name: Run the main file. It should print a message from the private repo
+        run: |
+          echo "Running the main file..."
+          nix run nixpkgs#nodejs -- result/index.js
